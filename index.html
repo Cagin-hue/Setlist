@@ -175,6 +175,46 @@ html,body{height:100%;background:var(--dark);font-family:var(--fb);color:var(--t
 .pa{font-size:11px;color:var(--muted);cursor:pointer;transition:color .15s}
 .pa:hover{color:var(--purple-l)}
 
+
+/* AVATAR SCREEN */
+.av-screen{position:fixed;inset:0;background:#080818;z-index:200;display:none;flex-direction:column;overflow-y:auto;max-width:430px;margin:0 auto}
+.av-screen.open{display:flex}
+.av-top{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
+.av-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:0;line-height:1}
+.av-title{font-family:var(--ff);font-size:18px;font-weight:800;letter-spacing:-.5px}
+.av-save-top{padding:7px 16px;border-radius:20px;background:var(--purple);color:#fff;border:none;font-family:var(--ff);font-size:13px;font-weight:700;cursor:pointer}
+.av-body{padding:16px 14px 32px;flex:1}
+.av-preview{display:flex;justify-content:center;margin-bottom:16px}
+.av-frame{width:160px;height:160px;border-radius:50%;overflow:hidden;border:3px solid var(--purple);background:#0a0a1e}
+.av-genre-tabs{display:flex;gap:5px;margin-bottom:13px;overflow-x:auto;scrollbar-width:none}
+.av-genre-tabs::-webkit-scrollbar{display:none}
+.av-gtab{padding:6px 11px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all .18s;font-family:var(--fb)}
+.av-gtab.on{color:#fff}
+.av-gtab.rock.on{background:#F43F5E;border-color:#F43F5E}
+.av-gtab.hiphop.on{background:#8B5CF6;border-color:#8B5CF6}
+.av-gtab.electronic.on{background:#6366F1;border-color:#6366F1}
+.av-gtab.jazz.on{background:#10B981;border-color:#10B981}
+.av-gtab.indie.on{background:#F59E0B;border-color:#F59E0B;color:#000}
+.av-lbl{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:1.3px;text-transform:uppercase;margin-bottom:7px;font-family:var(--ff)}
+.av-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:13px}
+.av-icard{background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:7px 3px 6px;cursor:pointer;text-align:center;transition:all .18s;position:relative}
+.av-icard.on{border-color:var(--purple);background:#221440}
+.av-icard:hover:not(.av-locked){border-color:rgba(124,58,237,.4)}
+.av-icard.av-locked{opacity:.38;cursor:not-allowed}
+.av-thumb{width:50px;height:50px;margin:0 auto 4px;border-radius:7px;overflow:hidden;background:#080818}
+.av-iname{font-size:9px;color:var(--muted);font-weight:500;line-height:1.25}
+.av-icard.on .av-iname{color:var(--purple-l)}
+.av-lbadge{position:absolute;top:3px;right:3px;font-size:9px}
+.av-crow{display:flex;gap:6px;margin-bottom:13px;flex-wrap:wrap}
+.av-cdot{width:25px;height:25px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .14s;flex-shrink:0}
+.av-cdot.on{border-color:#fff;transform:scale(1.2)}
+.av-earow{display:flex;gap:6px;margin-bottom:13px;flex-wrap:wrap}
+.av-ebtn{padding:5px 10px;border-radius:18px;font-size:10px;font-weight:600;border:1.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all .17s;font-family:var(--fb);display:flex;align-items:center;gap:4px}
+.av-ebtn.on{border-color:var(--purple);color:var(--purple-l);background:#1e1040}
+.av-savebtn{width:100%;padding:13px;border-radius:13px;background:var(--purple);color:#fff;border:none;font-family:var(--ff);font-size:15px;font-weight:700;cursor:pointer}
+.av-note{font-size:10px;color:var(--muted);text-align:center;margin-top:7px}
+.av-note b{color:var(--purple-l);font-weight:600}
+
 /* NAV */
 .nav{display:flex;background:var(--dark2);border-top:1px solid var(--border);padding:10px 0 16px;flex-shrink:0}
 .ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:4px}
@@ -329,6 +369,7 @@ html,body{height:100%;background:var(--dark);font-family:var(--fb);color:var(--t
         <div style="padding:20px 18px;text-align:center;color:var(--muted);font-size:13px">
           Henüz hiç konsere gitmedin.<br>Haritayı aç, bir konser seç! 🎵
         </div>
+        <button class="logout-btn" style="background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.3);color:var(--purple-l);margin-bottom:10px" onclick="openAvatar()">🎨 Avatar Oluştur</button>
         <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
       </div>
     </div>
@@ -453,6 +494,35 @@ html,body{height:100%;background:var(--dark);font-family:var(--fb);color:var(--t
       <button class="ni" id="nav-profile" onclick="requireAuth('profile')"><div class="ni-ic">👤</div><div class="ni-lb">Profil</div></button>
     </nav>
   </div>
+  <!-- AVATAR SCREEN -->
+  <div class="av-screen" id="av-screen">
+    <div class="av-top">
+      <button class="av-close" onclick="closeAvatar()">✕</button>
+      <div class="av-title">Avatar Oluştur</div>
+      <button class="av-save-top" onclick="saveAvatar()">Kaydet</button>
+    </div>
+    <div class="av-body">
+      <div class="av-preview"><div class="av-frame"><canvas id="av-canvas" width="160" height="160"></canvas></div></div>
+      <div class="av-genre-tabs" id="av-genre-tabs">
+        <button class="av-gtab rock on" onclick="avSetGenre('rock',this)">🎸 Rock</button>
+        <button class="av-gtab hiphop" onclick="avSetGenre('hiphop',this)">🎤 Hip-Hop</button>
+        <button class="av-gtab electronic" onclick="avSetGenre('electronic',this)">🎧 Elektronik</button>
+        <button class="av-gtab jazz" onclick="avSetGenre('jazz',this)">🎷 Caz</button>
+        <button class="av-gtab indie" onclick="avSetGenre('indie',this)">🎵 Indie</button>
+      </div>
+      <div class="av-lbl">Ten rengi</div>
+      <div class="av-crow" id="av-skin-row"></div>
+      <div class="av-lbl">Saç rengi</div>
+      <div class="av-crow" id="av-hc-row"></div>
+      <div class="av-lbl">Saç stili</div>
+      <div class="av-grid" id="av-hair-grid"></div>
+      <div class="av-lbl">Küpe</div>
+      <div class="av-earow" id="av-ear-row"></div>
+      <button class="av-savebtn" onclick="saveAvatar()">Avatarı Kaydet ✓</button>
+      <div class="av-note">🔒 Kilitli itemlar <b>konser puan</b>larıyla açılır</div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -637,7 +707,6 @@ function backToMap(){
 }
 
 function requireAuth(tab){
-  if(!currentUser){showAuth();return}
   switchTab(tab);
 }
 
@@ -689,7 +758,6 @@ function go_(){const g=document.getElementById('bgo'),m=document.getElementById(
 function mb_(){const g=document.getElementById('bgo'),m=document.getElementById('bmb');m.classList.add('on');g.style.opacity='.35';g.disabled=true}
 
 function connect(btn){
-  if(!currentUser){showAuth();return}
   btn.textContent='✓ Bağlandı';
   btn.style.borderColor='var(--teal)';
   btn.style.color='var(--teal)';
@@ -703,7 +771,6 @@ function like(el,n){
 }
 
 function addChannel(){
-  if(!currentUser){showAuth();return}
   const name=prompt('Kanal adı:');
   if(name){alert(name+' kanalı oluşturuldu! (Yakında aktif olacak)');}
 }
@@ -733,6 +800,209 @@ function buildArtistList(){
   });
 }
 buildArtistList();
+
+
+// ─── AVATAR SYSTEM ───────────────────────────────────────────────
+const AV_SKINS=['#FDDBB4','#F3B07B','#D4895A','#A0643C','#7B3F2B','#4A2415'];
+const AV_HCS=['#0d0d0d','#3B1F06','#7B3F00','#C8901A','#CC2200','#8800CC','#008899','#dddddd'];
+const AV_GC={rock:'#F43F5E',hiphop:'#8B5CF6',electronic:'#6366F1',jazz:'#10B981',indie:'#F59E0B'};
+const AV_GB={rock:'#1e0810',hiphop:'#0e0620',electronic:'#080820',jazz:'#041810',indie:'#181000'};
+const AV_GL={rock:'ROCK',hiphop:'HIP-HOP',electronic:'ELEKTRO',jazz:'CAZ',indie:'INDIE'};
+
+const AV_EARS=[
+  {n:'Yok',fn:()=>{}},
+  {n:'Gümüş top',fn:(c,cx,cy)=>{[cx-31,cx+31].forEach(x=>{c.beginPath();c.arc(x,cy+4,4,0,Math.PI*2);c.fillStyle='#C8C8C8';c.fill();})}},
+  {n:'Altın halka',fn:(c,cx,cy)=>{[cx-31,cx+31].forEach(x=>{c.beginPath();c.arc(x,cy+6,6.5,0,Math.PI*2);c.strokeStyle='#D4AA00';c.lineWidth=2.2;c.stroke();})}},
+  {n:'Diamond',fn:(c,cx,cy)=>{[cx-31,cx+31].forEach(x=>{c.beginPath();c.moveTo(x,cy-1);c.lineTo(x+4,cy+4);c.lineTo(x,cy+9);c.lineTo(x-4,cy+4);c.closePath();c.fillStyle='#88DDFF';c.fill();c.strokeStyle='#3399CC';c.lineWidth=.8;c.stroke();})}},
+  {n:'Tek halka',fn:(c,cx,cy)=>{c.beginPath();c.arc(cx-31,cy+6,7,0,Math.PI*2);c.strokeStyle='#FFD700';c.lineWidth=2.4;c.stroke();}},
+  {n:'Çubuk',fn:(c,cx,cy)=>{[cx-31,cx+31].forEach(x=>{c.beginPath();c.arc(x,cy,2.5,0,Math.PI*2);c.fillStyle='#C8C8C8';c.fill();c.beginPath();c.moveTo(x,cy+2);c.lineTo(x,cy+10);c.strokeStyle='#C8C8C8';c.lineWidth=2;c.lineCap='round';c.stroke();})}},
+  {n:'Kırmızı top',fn:(c,cx,cy)=>{[cx-31,cx+31].forEach(x=>{c.beginPath();c.arc(x,cy+4,4.5,0,Math.PI*2);c.fillStyle='#DD2222';c.fill();})}},
+];
+
+const AV_HAIR={
+  rock:[
+    {n:'Uzun dağınık',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(-25,18,11,38,-.22,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(25,18,11,38,.22,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(0,-30,24,20,0,0,Math.PI*2);c.fill();c.strokeStyle=hc;c.lineWidth=3.5;c.lineCap='round';[[-9,-50],[-4,-54],[2,-56],[8,-53],[14,-49],[-15,-48]].forEach(([dx,dy])=>{c.beginPath();c.moveTo(dx,dy+10);c.quadraticCurveTo(dx*1.3,dy-4,dx,dy);c.stroke();});}},
+    {n:'Punk Mohawk',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.moveTo(-7,10);c.lineTo(-11,-55);c.lineTo(0,-65);c.lineTo(11,-55);c.lineTo(7,10);c.closePath();c.fill();c.fillStyle=hc+'18';c.beginPath();c.ellipse(-22,-4,9,23,0,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(22,-4,9,23,0,0,Math.PI*2);c.fill();}},
+    {n:'Amerikan kesim',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-32,23,15,0,Math.PI,Math.PI*2);c.fill();c.fillRect(-23,-32,46,8);c.beginPath();c.moveTo(-23,-36);c.quadraticCurveTo(-10,-44,0,-42);c.quadraticCurveTo(10,-44,23,-36);c.lineTo(23,-32);c.lineTo(-23,-32);c.closePath();c.fill();}},
+    {n:'Uzun düz',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-28,24,22,0,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(-22,22,10,40,-.1,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(22,22,10,40,.1,0,Math.PI*2);c.fill();}},
+    {n:'Kısa spiky',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-33,22,14,0,Math.PI,Math.PI*2);c.fill();c.fillRect(-22,-33,44,8);c.beginPath();for(let i=0;i<6;i++){const x=-18+i*7.5;c.moveTo(x,-38);c.lineTo(x+4,-57+i%2*5);c.lineTo(x+7.5,-38);}c.fill();}},
+    {n:'80s Metal',free:false,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-26,27,24,0,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(-27,22,14,42,-.3,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(27,22,14,42,.3,0,Math.PI*2);c.fill();c.strokeStyle=hc;c.lineWidth=4.5;c.lineCap='round';[[-18,-62],[-9,-67],[0,-70],[9,-67],[18,-62]].forEach(([dx,dy])=>{c.beginPath();c.moveTo(dx,dy+14);c.lineTo(dx*1.2,dy);c.stroke();});}},
+    {n:'Dreadlock',free:false,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-28,22,18,0,0,Math.PI*2);c.fill();for(let i=0;i<8;i++){const x=-28+i*8;c.fillStyle=hc;c.beginPath();c.roundRect(x-3,-18,6,40+i%3*6,3);c.fill();}}},
+  ],
+  hiphop:[
+    {n:'Low Fade',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-33,21,14,0,Math.PI,Math.PI*2);c.fill();c.fillRect(-21,-33,42,8);for(let i=0;i<10;i++){const al=Math.max(0,1-i/10*2.5);c.fillStyle=hc+Math.round(al*255).toString(16).padStart(2,'0');c.fillRect(-21,-25+i*2.5,42,2.5);}}},
+    {n:'High-Top Fade',free:true,d:(c,hc)=>{c.fillStyle=hc;c.fillRect(-21,-65,42,33);c.fillRect(-21,-33,42,8);for(let i=0;i<12;i++){const al=(1-(i/12)**1.4);c.fillStyle=hc+Math.round(al*220).toString(16).padStart(2,'0');c.fillRect(-21,-25+i*2,42,2);}}},
+    {n:'Cornrows',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-30,22,18,0,0,Math.PI*2);c.fill();for(let i=0;i<6;i++){c.beginPath();c.ellipse(0,-46+i*6,19-i*.5,3.2,0,0,Math.PI*2);c.fillStyle=i%2===0?hc:hc+'cc';c.fill();}}},
+    {n:'Zigzag Cornrows',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-30,22,18,0,0,Math.PI*2);c.fill();for(let row=0;row<5;row++){const yw=-46+row*6;c.beginPath();c.moveTo(-20,yw);for(let x=-20;x<=20;x+=5){c.lineTo(x,yw+(Math.floor((x+20)/5)%2===0?-2:2));}c.lineWidth=3;c.strokeStyle=row%2===0?hc:hc+'aa';c.lineCap='round';c.stroke();}}},
+    {n:'Box Braids',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-28,22,18,0,0,Math.PI*2);c.fill();[-18,-10,-2,6,14].forEach((dx,i)=>{const blen=34+i%3*7;c.fillStyle=hc;c.beginPath();c.roundRect(dx-4,-20,8,blen,2);c.fill();c.strokeStyle=hc+'55';c.lineWidth=1.5;for(let j=5;j<blen;j+=6){c.beginPath();c.moveTo(dx-4,-20+j);c.lineTo(dx+4,-20+j);c.stroke();}});}},
+    {n:'Rasta',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-28,22,18,0,0,Math.PI*2);c.fill();const RC=['#DD2200','#FFD700','#008800'];[-22,-13,-4,5,14,23,-18,18].forEach((dx,i)=>{const len=36+i%3*7;const segH=len/3;RC.forEach((col,si)=>{c.fillStyle=si===0?hc:col;c.beginPath();c.roundRect(dx-4,-18+si*segH,8,segH,2);c.fill();});})}},
+    {n:'360 Waves',free:false,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-33,21,14,0,Math.PI,Math.PI*2);c.fill();c.fillRect(-21,-33,42,8);for(let i=0;i<8;i++){c.strokeStyle=hc+(i%2===0?'66':'33');c.lineWidth=1.5;c.beginPath();c.arc(0,-24,6+i*3.5,Math.PI,Math.PI*2);c.stroke();}}},
+    {n:'Mohawk Fade',free:false,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.moveTo(-6,8);c.lineTo(-10,-54);c.lineTo(0,-62);c.lineTo(10,-54);c.lineTo(6,8);c.closePath();c.fill();for(let i=0;i<10;i++){const al=(1-i/10)**2;c.fillStyle=hc+Math.round(al*160).toString(16).padStart(2,'0');const w=22+i*2;c.fillRect(-w,-22+i*3,w-6,3);c.fillRect(6,-22+i*3,w-6,3);}}},
+  ],
+  electronic:[
+    {n:'Kısa teknik',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-33,21,13,0,Math.PI,Math.PI*2);c.fill();c.fillRect(-21,-33,42,7);}},
+    {n:'Neon boyalı',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-28,23,20,0,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(-21,4,9,20,-.17,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(21,4,9,20,.17,0,Math.PI*2);c.fill();[['#FF00FF',-8],['#00FFFF',0],['#FF6600',8]].forEach(([nc,x])=>{c.strokeStyle=nc;c.lineWidth=2.5;c.lineCap='round';c.beginPath();c.moveTo(x,-48);c.lineTo(x,-28);c.stroke();});}},
+    {n:'Undercut',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(6,-37,19,12,-.22,Math.PI,Math.PI*2);c.fill();c.fillRect(-13,-37,38,10);c.beginPath();c.ellipse(8,-39,16,10,-.28,0,Math.PI*2);c.fill();}},
+    {n:'Cyber dreads',free:true,d:(c,hc)=>{c.fillStyle='#111122';c.beginPath();c.ellipse(0,-28,22,18,0,0,Math.PI*2);c.fill();['#FF00FF','#00FFFF','#FF6600','#00FF88','#FFFF00','#FF0088'].forEach((col,i)=>{const dx=-22+i*9;c.fillStyle=col;c.beginPath();c.roundRect(dx-3,-18,6,30+i%3*8,3);c.fill();});}},
+    {n:'Mavi uzun',free:true,d:(c,hc)=>{c.fillStyle='#003380';c.beginPath();c.ellipse(0,-28,24,22,0,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(-21,8,9,24,-.14,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(21,8,9,24,.14,0,Math.PI*2);c.fill();}},
+    {n:'Mor lüle',free:false,d:(c,hc)=>{c.fillStyle='#5500AA';c.beginPath();c.ellipse(0,-28,23,20,0,0,Math.PI*2);c.fill();for(let i=0;i<6;i++){c.beginPath();c.arc(-18+i*7,-22,6,0,Math.PI*2);c.fill();}c.beginPath();c.ellipse(-21,6,9,20,-.2,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(21,6,9,20,.2,0,Math.PI*2);c.fill();}},
+    {n:'Metalik',free:false,d:(c,hc)=>{const gr=c.createLinearGradient(-22,-50,22,10);gr.addColorStop(0,'#9999BB');gr.addColorStop(.5,'#5555AA');gr.addColorStop(1,'#222255');c.fillStyle=gr;c.beginPath();c.ellipse(0,-28,23,20,0,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(-21,6,9,20,-.2,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(21,6,9,20,.2,0,Math.PI*2);c.fill();}},
+  ],
+  jazz:[
+    {n:'Klasik kısa',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-33,21,14,0,Math.PI,Math.PI*2);c.fill();c.fillRect(-21,-33,42,8);}},
+    {n:'Side Part',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-28,23,20,0,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(9,-40,18,10,-.36,0,Math.PI*2);c.fill();}},
+    {n:'Kıvırcık',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.arc(0,-30,25,0,Math.PI*2);c.fill();for(let i=0;i<10;i++){const a=(i/10)*Math.PI*2;c.beginPath();c.arc(Math.cos(a)*18,-30+Math.sin(a)*16,6,0,Math.PI*2);c.fill();}}},
+    {n:'Pompadour',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-46,19,20,0,Math.PI,Math.PI*2);c.fill();c.beginPath();c.ellipse(0,-40,16,14,0,0,Math.PI*2);c.fill();c.fillRect(-20,-44,40,12);c.beginPath();c.moveTo(-20,-44);c.quadraticCurveTo(0,-62,20,-44);c.fill();}},
+    {n:'Retro waves',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-28,22,18,0,0,Math.PI*2);c.fill();c.strokeStyle=hc+'50';c.lineWidth=2;for(let i=0;i<5;i++){c.beginPath();c.moveTo(-19,-44+i*6);c.quadraticCurveTo(0,-48+i*6,19,-44+i*6);c.stroke();}}},
+    {n:'Vintage Afro',free:false,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.arc(0,-32,28,0,Math.PI*2);c.fill();for(let i=0;i<12;i++){const a=(i/12)*Math.PI*2;c.beginPath();c.arc(Math.cos(a)*24,-32+Math.sin(a)*22,6,0,Math.PI*2);c.fill();}}},
+    {n:'Jazz Maestro',free:false,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-28,22,18,0,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(0,-44,18,16,0,Math.PI,Math.PI*2);c.fill();c.fillRect(-22,-44,44,16);}},
+  ],
+  indie:[
+    {n:'Messy bun',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.arc(5,-52,12,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(0,-33,22,14,0,Math.PI,Math.PI*2);c.fill();c.fillRect(-22,-33,44,8);c.strokeStyle=hc;c.lineWidth=2.2;c.lineCap='round';c.beginPath();c.moveTo(-19,-28);c.quadraticCurveTo(-24,-8,-21,8);c.stroke();c.beginPath();c.moveTo(19,-28);c.quadraticCurveTo(24,-6,20,10);c.stroke();}},
+    {n:'Curtain bangs',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-28,23,20,0,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(-21,6,9,22,-.2,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(21,6,9,22,.2,0,Math.PI*2);c.fill();c.lineWidth=13;c.strokeStyle=hc;c.lineCap='round';c.beginPath();c.moveTo(0,-48);c.lineTo(-15,-32);c.stroke();c.beginPath();c.moveTo(0,-48);c.lineTo(15,-32);c.stroke();}},
+    {n:'Shaggy',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-26,25,22,0,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(-21,5,9,20,-.18,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(21,5,9,20,.18,0,Math.PI*2);c.fill();c.strokeStyle=hc;c.lineWidth=4.5;c.lineCap='round';for(let i=0;i<6;i++){const x=-18+i*7.5;c.beginPath();c.moveTo(x,-46);c.lineTo(x-3,-30+i%2*5);c.stroke();}}},
+    {n:'Wolf cut',free:true,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-26,24,22,0,0,Math.PI*2);c.fill();c.strokeStyle=hc;c.lineWidth=5.5;c.lineCap='round';[[-14,-48],[-7,-53],[0,-55],[7,-53],[14,-48]].forEach(([dx,dy])=>{c.beginPath();c.moveTo(dx,dy+14);c.lineTo(dx*1.35,dy);c.stroke();});c.fillStyle=hc;c.beginPath();c.ellipse(-22,8,10,24,-.22,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(22,8,10,24,.22,0,Math.PI*2);c.fill();}},
+    {n:'Fluffy',free:true,d:(c,hc)=>{c.fillStyle=hc;[[0,-36,26],[-17,-28,14],[17,-28,14],[-20,6,10],[20,6,10]].forEach(([x,y,r])=>{c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fill();});}},
+    {n:'Retro bangs',free:false,d:(c,hc)=>{c.fillStyle=hc;c.beginPath();c.ellipse(0,-26,24,22,0,0,Math.PI*2);c.fill();c.fillRect(-23,-46,46,16);c.beginPath();c.ellipse(-21,6,9,22,-.2,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(21,6,9,22,.2,0,Math.PI*2);c.fill();}},
+    {n:'Pastel',free:false,d:(c,hc)=>{const gr=c.createLinearGradient(-24,-52,24,15);gr.addColorStop(0,'#FFB3DE');gr.addColorStop(.4,'#B3D9FF');gr.addColorStop(1,'#B3FFD9');c.fillStyle=gr;c.beginPath();c.ellipse(0,-26,24,22,0,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(-21,6,9,22,-.2,0,Math.PI*2);c.fill();c.beginPath();c.ellipse(21,6,9,22,.2,0,Math.PI*2);c.fill();}},
+  ],
+};
+
+let avS={genre:'rock',skin:'#F3B07B',hc:'#0d0d0d',hair:0,ear:0};
+
+function openAvatar(){
+  document.getElementById('av-screen').classList.add('open');
+  avBuildSkin();avBuildHC();avBuildHair();avBuildEars();avDraw();
+}
+function closeAvatar(){document.getElementById('av-screen').classList.remove('open');}
+function saveAvatar(){
+  // Copy canvas to user badge as data url
+  const canvas=document.getElementById('av-canvas');
+  const data=canvas.toDataURL();
+  const badge=document.getElementById('user-badge');
+  badge.innerHTML='';
+  const img=document.createElement('img');
+  img.src=data;img.style.cssText='width:100%;height:100%;border-radius:50%;object-fit:cover';
+  badge.appendChild(img);
+  closeAvatar();
+  // Show toast
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#7C3AED;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:300;font-family:Syne,sans-serif';
+  t.textContent='Avatar kaydedildi! ✓';
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2200);
+}
+
+function avSetGenre(g,btn){
+  avS.genre=g;avS.hair=0;
+  document.querySelectorAll('.av-gtab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');
+  avBuildHair();avDraw();
+}
+
+function avBuildSkin(){
+  const row=document.getElementById('av-skin-row');row.innerHTML='';
+  AV_SKINS.forEach(c=>{
+    const d=document.createElement('div');d.className='av-cdot'+(c===avS.skin?' on':'');d.style.background=c;
+    d.onclick=()=>{avS.skin=c;row.querySelectorAll('.av-cdot').forEach(x=>x.classList.remove('on'));d.classList.add('on');avDraw();};
+    row.appendChild(d);
+  });
+}
+
+function avBuildHC(){
+  const row=document.getElementById('av-hc-row');row.innerHTML='';
+  AV_HCS.forEach(c=>{
+    const d=document.createElement('div');d.className='av-cdot'+(c===avS.hc?' on':'');
+    d.style.cssText=`background:${c};${c==='#dddddd'?'border-color:#555;':''}`;
+    d.onclick=()=>{avS.hc=c;row.querySelectorAll('.av-cdot').forEach(x=>x.classList.remove('on'));d.classList.add('on');avBuildHair();avDraw();};
+    row.appendChild(d);
+  });
+}
+
+function avBuildHair(){
+  const grid=document.getElementById('av-hair-grid');grid.innerHTML='';
+  AV_HAIR[avS.genre].forEach((s,i)=>{
+    const card=document.createElement('div');
+    card.className='av-icard'+(i===avS.hair?' on':'')+(s.free?'':' av-locked');
+    const tc=document.createElement('canvas');tc.width=50;tc.height=50;
+    const tx=tc.getContext('2d');
+    tx.fillStyle=AV_GB[avS.genre];tx.beginPath();tx.arc(25,25,24,0,Math.PI*2);tx.fill();
+    tx.save();tx.translate(25,34);tx.scale(.38,.38);s.d(tx,avS.hc);tx.restore();
+    tx.fillStyle=avS.skin;tx.beginPath();tx.ellipse(25,30,10,12,0,0,Math.PI*2);tx.fill();
+    [[25-5,26],[25+5,26]].forEach(([x,y])=>{tx.beginPath();tx.arc(x,y,3,0,Math.PI*2);tx.fillStyle='#1a1a2e';tx.fill();});
+    const th=document.createElement('div');th.className='av-thumb';th.appendChild(tc);
+    card.appendChild(th);
+    const nm=document.createElement('div');nm.className='av-iname';nm.textContent=s.n;card.appendChild(nm);
+    if(!s.free){const lb=document.createElement('div');lb.className='av-lbadge';lb.textContent='🔒';card.appendChild(lb);}
+    if(s.free){card.onclick=()=>{avS.hair=i;grid.querySelectorAll('.av-icard').forEach(c=>c.classList.remove('on'));card.classList.add('on');avDraw();};}
+    grid.appendChild(card);
+  });
+}
+
+function avBuildEars(){
+  const row=document.getElementById('av-ear-row');row.innerHTML='';
+  AV_EARS.forEach((e,i)=>{
+    const b=document.createElement('button');b.className='av-ebtn'+(i===avS.ear?' on':'');
+    b.textContent=e.n;
+    b.onclick=()=>{avS.ear=i;avBuildEars();avDraw();};
+    row.appendChild(b);
+  });
+}
+
+function avDraw(){
+  const cv=document.getElementById('av-canvas');
+  if(!cv)return;
+  const c=cv.getContext('2d');
+  const W=160,H=160,cx=80,cy=80;
+  c.clearRect(0,0,W,H);
+  c.beginPath();c.arc(cx,cy,78,0,Math.PI*2);c.fillStyle=AV_GB[avS.genre];c.fill();
+  c.beginPath();c.arc(cx,cy,76,0,Math.PI*2);c.strokeStyle=AV_GC[avS.genre]+'44';c.lineWidth=2;c.stroke();
+  c.beginPath();c.ellipse(cx,122,37,26,0,0,Math.PI*2);c.fillStyle=AV_GC[avS.genre]+'30';c.fill();
+  c.fillStyle=avS.skin;c.beginPath();c.roundRect(cx-9,87,18,20,4);c.fill();
+  // Ears
+  c.fillStyle=avS.skin;
+  c.beginPath();c.ellipse(cx-29,cy+2,5,7,0,0,Math.PI*2);c.fill();
+  c.beginPath();c.ellipse(cx+29,cy+2,5,7,0,0,Math.PI*2);c.fill();
+  // Hair behind head
+  c.save();c.translate(cx,cy);AV_HAIR[avS.genre][avS.hair].d(c,avS.hc);c.restore();
+  // Head
+  c.fillStyle=avS.skin;c.beginPath();c.ellipse(cx,cy-2,29,32,0,0,Math.PI*2);c.fill();
+  // Ears on top
+  c.fillStyle=avS.skin;
+  c.beginPath();c.ellipse(cx-29,cy+2,5,7,0,0,Math.PI*2);c.fill();
+  c.beginPath();c.ellipse(cx+29,cy+2,5,7,0,0,Math.PI*2);c.fill();
+  // Earrings
+  AV_EARS[avS.ear].fn(c,cx,cy);
+  // Eyes
+  [[cx-11,cy-8],[cx+11,cy-8]].forEach(([x,y])=>{
+    c.beginPath();c.ellipse(x,y,5,5.5,0,0,Math.PI*2);c.fillStyle='#1a1a2e';c.fill();
+    c.beginPath();c.arc(x+1.4,y-1.6,1.6,0,Math.PI*2);c.fillStyle='#fff';c.fill();
+  });
+  // Eyebrows
+  const brow=avS.hc==='#dddddd'?'#999':avS.hc;
+  c.strokeStyle=brow;c.lineWidth=2.2;c.lineCap='round';
+  const g=avS.genre;
+  if(g==='rock'||g==='hiphop'){
+    c.beginPath();c.moveTo(cx-16,cy-20);c.lineTo(cx-7,cy-18);c.stroke();
+    c.beginPath();c.moveTo(cx+7,cy-18);c.lineTo(cx+16,cy-20);c.stroke();
+  } else {
+    c.beginPath();c.moveTo(cx-15,cy-19);c.quadraticCurveTo(cx-11,cy-22,cx-7,cy-19);c.stroke();
+    c.beginPath();c.moveTo(cx+7,cy-19);c.quadraticCurveTo(cx+11,cy-22,cx+15,cy-19);c.stroke();
+  }
+  // Nose
+  c.strokeStyle=avS.skin==='#FDDBB4'?'#d4895a40':'#00000022';c.lineWidth=1.3;
+  c.beginPath();c.moveTo(cx,cy-3);c.lineTo(cx-3.5,cy+9);c.lineTo(cx+3.5,cy+9);c.stroke();
+  // Mouth
+  c.strokeStyle='#8B3A3A';c.lineWidth=2;c.lineCap='round';
+  if(g==='rock'){c.beginPath();c.moveTo(cx-8,cy+16);c.quadraticCurveTo(cx+2,cy+20,cx+9,cy+15);c.stroke();}
+  else if(g==='jazz'){c.beginPath();c.moveTo(cx-7,cy+16);c.quadraticCurveTo(cx,cy+18,cx+7,cy+16);c.stroke();}
+  else{c.beginPath();c.moveTo(cx-8,cy+16);c.quadraticCurveTo(cx,cy+21,cx+8,cy+16);c.stroke();}
+  // Badge
+  c.beginPath();c.roundRect(cx-34,140,68,19,9);c.fillStyle=AV_GC[avS.genre];c.fill();
+  c.fillStyle='#fff';c.font='bold 10px sans-serif';c.textAlign='center';
+  c.fillText(AV_GL[avS.genre],cx,152);
+}
+// ─── END AVATAR SYSTEM ───────────────────────────────────────────
+
 </script>
 </body>
 </html>
