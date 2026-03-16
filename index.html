@@ -141,6 +141,40 @@ html,body{height:100%;background:var(--dark);font-family:var(--fb);color:var(--t
 .cr-venue{font-size:11px;color:var(--muted);margin-top:1px}
 .cr-pts{font-size:11px;font-weight:700;color:var(--teal)}
 
+/* COMMUNITY SCREEN */
+.scr-header{padding:16px 18px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0}
+.scr-title{font-family:var(--ff);font-size:20px;font-weight:800;letter-spacing:-.5px}
+.comm-scroll{flex:1;overflow-y:auto;scrollbar-width:none}
+.comm-scroll::-webkit-scrollbar{display:none}
+.sec-lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;padding:14px 18px 8px;font-family:var(--ff)}
+.ch-card{display:flex;align-items:center;gap:12px;padding:12px 18px;cursor:pointer;transition:background .15s;border-bottom:1px solid var(--border)}
+.ch-card:hover{background:var(--card)}
+.ch-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ch-info{flex:1}
+.ch-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+.ch-sub{font-size:11px;color:var(--muted)}
+.sub-btn{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid var(--border);background:none;cursor:pointer;color:var(--muted);transition:all .2s;font-family:var(--fb);white-space:nowrap}
+.sub-btn.on{background:var(--purple);border-color:var(--purple);color:#fff}
+.going-card{margin:0 18px 8px;background:var(--card);border-radius:14px;padding:14px;border:1px solid var(--border)}
+.going-concert{font-size:11px;color:var(--purple-l);margin-bottom:10px;font-weight:600}
+.p-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.p-row:last-child{margin-bottom:0}
+.p-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.p-name{font-size:13px;font-weight:600;color:var(--text)}
+.p-detail{font-size:11px;color:var(--muted);margin-top:1px}
+.conn-btn{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all .2s;font-family:var(--fb)}
+.conn-btn:hover{border-color:var(--purple-l);color:var(--purple-l)}
+.post-card{padding:14px 18px;border-bottom:1px solid var(--border)}
+.post-hdr{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.post-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.post-user{font-size:13px;font-weight:600;color:var(--text)}
+.post-time{font-size:11px;color:var(--muted);margin-top:1px}
+.post-text{font-size:13px;color:var(--text);line-height:1.55;margin-bottom:8px}
+.post-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:var(--card);border-radius:20px;font-size:11px;color:var(--muted);border:1px solid var(--border);margin-bottom:10px;cursor:pointer}
+.post-acts{display:flex;gap:16px}
+.pa{font-size:11px;color:var(--muted);cursor:pointer;transition:color .15s}
+.pa:hover{color:var(--purple-l)}
+
 /* NAV */
 .nav{display:flex;background:var(--dark2);border-top:1px solid var(--border);padding:10px 0 16px;flex-shrink:0}
 .ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:4px}
@@ -299,6 +333,91 @@ html,body{height:100%;background:var(--dark);font-family:var(--fb);color:var(--t
       </div>
     </div>
 
+    <!-- COMMUNITY SCREEN -->
+    <div class="screen" id="scr-community">
+      <div class="scr-header">
+        <div class="scr-title">Topluluk</div>
+        <div style="font-size:11px;color:var(--purple-l);font-weight:600;cursor:pointer">+ Kanal</div>
+      </div>
+      <div class="comm-scroll">
+        <div class="sec-lbl">Kanallar</div>
+        <div class="ch-card">
+          <div class="ch-icon" style="background:#2a0a12">🎸</div>
+          <div class="ch-info"><div class="ch-name">İstanbul Rock Sahnesi</div><div class="ch-sub">1.240 üye · Bu hafta 3 etkinlik</div></div>
+          <button class="sub-btn on" onclick="toggleSub(this)">Takip</button>
+        </div>
+        <div class="ch-card">
+          <div class="ch-icon" style="background:#0f0f2e">🎧</div>
+          <div class="ch-info"><div class="ch-name">Elektronik İstanbul</div><div class="ch-sub">3.870 üye · Bu hafta 5 etkinlik</div></div>
+          <button class="sub-btn" onclick="toggleSub(this)">Takip Et</button>
+        </div>
+        <div class="ch-card">
+          <div class="ch-icon" style="background:#0a1f18">🎷</div>
+          <div class="ch-info"><div class="ch-name">Caz Severler · Nardis</div><div class="ch-sub">680 üye · Nardis Jazz Club topluluğu</div></div>
+          <button class="sub-btn" onclick="toggleSub(this)">Takip Et</button>
+        </div>
+        <div class="ch-card">
+          <div class="ch-icon" style="background:#12082a">🎙</div>
+          <div class="ch-info"><div class="ch-name">Rap & Hip-Hop İstanbul</div><div class="ch-sub">2.100 üye · Bu hafta 4 etkinlik</div></div>
+          <button class="sub-btn" onclick="toggleSub(this)">Takip Et</button>
+        </div>
+        <div class="ch-card">
+          <div class="ch-icon" style="background:#1f1500">🎤</div>
+          <div class="ch-info"><div class="ch-name">Bant Mag Okuyucuları</div><div class="ch-sub">4.200 üye · Türkiye müzik gündemi</div></div>
+          <button class="sub-btn" onclick="toggleSub(this)">Takip Et</button>
+        </div>
+
+        <div class="sec-lbl">Bu Konsere Gidenler · Duman / 21 Mart</div>
+        <div class="going-card">
+          <div class="going-concert">📍 Jolly Joker Atakent · Cumartesi 21:00 · 134 kişi gidiyor</div>
+          <div class="p-row">
+            <div class="p-av" style="background:#2a0a18;color:#F43F5E">AY</div>
+            <div style="flex:1"><div class="p-name">Ayşe Y.</div><div class="p-detail">Beşiktaş · Rock severler · 12 ortak konser</div></div>
+            <button class="conn-btn">Bağlan</button>
+          </div>
+          <div class="p-row">
+            <div class="p-av" style="background:#1a1540;color:#A78BFA">MK</div>
+            <div style="flex:1"><div class="p-name">Mert K.</div><div class="p-detail">Kadıköy · Indie, Rock seviyor</div></div>
+            <button class="conn-btn">Bağlan</button>
+          </div>
+          <div class="p-row">
+            <div class="p-av" style="background:#0f2518;color:#10B981">ZD</div>
+            <div style="flex:1"><div class="p-name">Zeynep D.</div><div class="p-detail">Şişli · Yalnız gidiyor · Belki odası</div></div>
+            <button class="conn-btn">Bağlan</button>
+          </div>
+        </div>
+
+        <div class="sec-lbl">Akış</div>
+        <div class="post-card">
+          <div class="post-hdr">
+            <div class="post-av" style="background:#1f1500;color:#F59E0B">EC</div>
+            <div><div class="post-user">Ece C.</div><div class="post-time">2 saat önce</div></div>
+          </div>
+          <div class="post-text">Alessandro Cortini konserinden yeni çıktım. Analog synth atmosferi inanılmazdı, kelimeler yetmez 🎧</div>
+          <div class="post-chip">📍 Zorlu PSM · 16 Mart</div>
+          <div class="post-acts"><span class="pa">♥ 24</span><span class="pa">💬 7 yorum</span><span class="pa">↗ Paylaş</span></div>
+        </div>
+        <div class="post-card">
+          <div class="post-hdr">
+            <div class="post-av" style="background:#12082a;color:#8B5CF6">BT</div>
+            <div><div class="post-user">Burak T.</div><div class="post-time">5 saat önce</div></div>
+          </div>
+          <div class="post-text">Duman konserine tek bilet kaldı, kim alır? DM atın 🎸</div>
+          <div class="post-chip">📍 Jolly Joker Atakent · 21 Mart</div>
+          <div class="post-acts"><span class="pa">♥ 11</span><span class="pa">💬 18 yorum</span><span class="pa">↗ Paylaş</span></div>
+        </div>
+        <div class="post-card">
+          <div class="post-hdr">
+            <div class="post-av" style="background:#0a1f18;color:#10B981">ZD</div>
+            <div><div class="post-user">Zeynep D.</div><div class="post-time">1 gün önce</div></div>
+          </div>
+          <div class="post-text">Yalın konseri için kim grup yapar? Volkswagen Arena için eleman arıyorum 🎤</div>
+          <div class="post-chip">📍 Volkswagen Arena · 26 Mart</div>
+          <div class="post-acts"><span class="pa">♥ 33</span><span class="pa">💬 22 yorum</span><span class="pa">↗ Paylaş</span></div>
+        </div>
+      </div>
+    </div>
+
     <nav class="nav">
       <button class="ni on" id="nav-map" onclick="switchTab('map')"><div class="ni-ic">🗺</div><div class="ni-lb">Harita</div></button>
       <button class="ni" id="nav-artists"><div class="ni-ic">🎵</div><div class="ni-lb">Sanatçılar</div></button>
@@ -314,21 +433,96 @@ const SUPABASE_KEY = 'sb_publishable_RUaMwwOAs1C91_htDKCPRQ_IrtyjcaO';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const concerts=[
-  {g:'Rock',c:'rock',tb:'rgba(244,63,94,.15)',tc:'#F43F5E',t:'Emir Can İğrek',v:'📍 IF Performance Hall — Beşiktaş',tm:'🕐 Pazartesi 16 Mart · 21:30',p:'350₺',u:'https://www.bubilet.com.tr',av:[['EC','#3a1520','#F43F5E'],['AY','#1a1540','#A78BFA'],['MK','#0f2518','#10B981']],n:47},
-  {g:'Rock',c:'rock',tb:'rgba(244,63,94,.15)',tc:'#F43F5E',t:'Duman',v:'📍 Jolly Joker Atakent — Küçükçekmece',tm:'🕐 Cuma 21 Mart · 21:00',p:'450₺',u:'https://www.bubilet.com.tr',av:[['DU','#2a0a18','#F43F5E'],['ZD','#0f2518','#10B981'],['BT','#1a1540','#A78BFA'],['AY','#3a1520','#F87171']],n:134},
-  {g:'Alternatif',c:'alt',tb:'rgba(16,185,129,.12)',tc:'#10B981',t:'Can Bonomo',v:'📍 IF Performance Hall — Beşiktaş',tm:'🕐 Cumartesi 7 Mart · 21:30',p:'300₺',u:'https://www.bubilet.com.tr',av:[['CB','#0f2518','#10B981'],['MK','#1a1540','#A78BFA']],n:28},
-  {g:'Pop',c:'pop',tb:'rgba(245,158,11,.12)',tc:'#F59E0B',t:'Gökhan Türkmen',v:'📍 Jolly Joker Vadistanbul — Maslak',tm:'🕐 Cumartesi 14 Mart · 21:00',p:'400₺',u:'https://www.bubilet.com.tr',av:[['GT','#1f1500','#F59E0B'],['ZD','#0f2518','#10B981'],['BT','#1a1540','#A78BFA']],n:89},
-  {g:'Rap',c:'rap',tb:'rgba(139,92,246,.15)',tc:'#8B5CF6',t:'Şanışer & Sokrat St',v:'📍 Dorock XL — Kadıköy',tm:'🕐 Perşembe 13 Mart · 21:30',p:'280₺',u:'https://www.bubilet.com.tr',av:[['ŞŞ','#12082a','#8B5CF6'],['AY','#3a1520','#F43F5E'],['MK','#1a1540','#A78BFA']],n:62},
-  {g:'Elektronik',c:'elec',tb:'rgba(99,102,241,.15)',tc:'#818CF8',t:'Alessandro Cortini',v:'📍 Zorlu PSM — Beşiktaş',tm:'🕐 Çarşamba 19 Mart · 22:00',p:'650₺',u:'https://www.zorlu.com',av:[['AC','#0f0f2e','#818CF8'],['ZD','#0f2518','#10B981'],['BT','#1a1540','#A78BFA'],['MK','#2a0a18','#F43F5E']],n:203},
+// Tüm konserler — tarih: 2026-03-XX formatında
+const allConcerts=[
+  {g:'Alternatif',c:'alt',tb:'rgba(16,185,129,.12)',tc:'#10B981',t:'Emir Can İğrek',v:'📍 IF Performance Hall — Beşiktaş',tm:'🕐 Pazartesi 16 Mart · 21:30',p:'350₺',u:'https://www.bubilet.com.tr',av:[['EC','#3a1520','#F43F5E'],['AY','#1a1540','#A78BFA'],['MK','#0f2518','#10B981']],n:47,date:'2026-03-16'},
+  {g:'Elektronik',c:'elec',tb:'rgba(99,102,241,.15)',tc:'#818CF8',t:'Alessandro Cortini',v:'📍 Zorlu PSM — Beşiktaş',tm:'🕐 Pazartesi 16 Mart · 22:00',p:'650₺',u:'https://www.zorlu.com',av:[['AC','#0f0f2e','#818CF8'],['ZD','#0f2518','#10B981'],['BT','#1a1540','#A78BFA']],n:203,date:'2026-03-16'},
+  {g:'Alternatif',c:'alt',tb:'rgba(16,185,129,.12)',tc:'#10B981',t:'Cem Adrian',v:'📍 Jolly Joker Kartal İstMarina',tm:'🕐 Salı 17 Mart · 21:00',p:'350₺',u:'https://www.bubilet.com.tr',av:[['CA','#0a1f18','#10B981'],['MK','#1a1540','#A78BFA']],n:34,date:'2026-03-17'},
+  {g:'Elektronik',c:'elec',tb:'rgba(99,102,241,.15)',tc:'#818CF8',t:'Lakecia Benjamin',v:'📍 Paribu Art — Beyoğlu',tm:'🕐 Salı 17 Mart · 21:00',p:'300₺',u:'https://art.paribu.com',av:[['LB','#0f0f2e','#818CF8'],['ZD','#0f2518','#10B981'],['AY','#3a1520','#F43F5E']],n:88,date:'2026-03-17'},
+  {g:'Elektronik',c:'elec',tb:'rgba(99,102,241,.15)',tc:'#818CF8',t:'Techno Gecesi',v:'📍 Klein Phönix — Beyoğlu',tm:'🕐 Salı 17 Mart · 22:00',p:'600₺',u:'https://bugece.co',av:[['TG','#0f0f2e','#818CF8'],['AY','#3a1520','#F43F5E']],n:89,date:'2026-03-17'},
+  {g:'Elektronik',c:'elec',tb:'rgba(99,102,241,.15)',tc:'#818CF8',t:'Blind İstanbul Gecesi',v:'📍 Blind İstanbul — Beyoğlu',tm:'🕐 Çarşamba 18 Mart · 22:00',p:'500₺',u:'https://bugece.co',av:[['BL','#0f0f2e','#818CF8'],['ZD','#0f2518','#10B981'],['MK','#1a1540','#A78BFA']],n:67,date:'2026-03-18'},
+  {g:'Rock',c:'rock',tb:'rgba(244,63,94,.15)',tc:'#F43F5E',t:'Rock & Metal Gecesi',v:'📍 IF Performance Hall — Beşiktaş',tm:'🕐 Perşembe 19 Mart · 21:00',p:'1000₺',u:'https://bugece.co',av:[['RM','#2a0a18','#F43F5E'],['BT','#1a1540','#A78BFA']],n:45,date:'2026-03-19'},
+  {g:'Elektronik',c:'elec',tb:'rgba(99,102,241,.15)',tc:'#818CF8',t:'Hey! Douglas',v:'📍 Blind İstanbul — Beyoğlu',tm:'🕐 Perşembe 19 Mart · 21:00',p:'200₺',u:'https://www.bubilet.com.tr',av:[['HD','#0f0f2e','#818CF8'],['AY','#3a1520','#F43F5E']],n:41,date:'2026-03-19'},
+  {g:'Rap',c:'rap',tb:'rgba(139,92,246,.15)',tc:'#8B5CF6',t:'Bege',v:'📍 IF Performance Hall — Beşiktaş',tm:'🕐 Cuma 20 Mart · 22:00',p:'250₺',u:'https://www.bubilet.com.tr',av:[['BG','#12082a','#8B5CF6'],['ZD','#0f2518','#10B981']],n:55,date:'2026-03-20'},
+  {g:'Rock',c:'rock',tb:'rgba(244,63,94,.15)',tc:'#F43F5E',t:'Duman',v:'📍 Jolly Joker Atakent — Küçükçekmece',tm:'🕐 Cumartesi 21 Mart · 21:00',p:'450₺',u:'https://www.bubilet.com.tr',av:[['DU','#2a0a18','#F43F5E'],['ZD','#0f2518','#10B981'],['BT','#1a1540','#A78BFA'],['AY','#3a1520','#F87171']],n:134,date:'2026-03-21'},
+  {g:'Rap',c:'rap',tb:'rgba(139,92,246,.15)',tc:'#8B5CF6',t:'Lvbel C5',v:'📍 Klein Phönix — Beyoğlu',tm:'🕐 Çarşamba 25 Mart · 22:00',p:'280₺',u:'https://www.bubilet.com.tr',av:[['LC','#12082a','#8B5CF6'],['MK','#1a1540','#A78BFA']],n:78,date:'2026-03-25'},
+  {g:'Alternatif',c:'alt',tb:'rgba(16,185,129,.12)',tc:'#10B981',t:'Ben Caplan',v:'📍 Paribu Art Ana Sahne — Beyoğlu',tm:'🕐 Perşembe 26 Mart · 21:00',p:'350₺',u:'https://art.paribu.com',av:[['BC','#0a1f18','#10B981'],['MK','#1a1540','#A78BFA']],n:72,date:'2026-03-26'},
+  {g:'Pop',c:'pop',tb:'rgba(245,158,11,.12)',tc:'#F59E0B',t:'Yalın',v:'📍 Volkswagen Arena — Şişli',tm:'🕐 Perşembe 26 Mart · 21:00',p:'500₺',u:'https://www.bubilet.com.tr',av:[['YL','#1f1500','#F59E0B'],['EC','#3a1520','#F43F5E'],['BT','#1a1540','#A78BFA']],n:312,date:'2026-03-26'},
+  {g:'Pop',c:'pop',tb:'rgba(245,158,11,.12)',tc:'#F59E0B',t:'Yalın',v:'📍 Volkswagen Arena — Şişli',tm:'🕐 Cuma 27 Mart · 21:00',p:'500₺',u:'https://www.bubilet.com.tr',av:[['YL','#1f1500','#F59E0B'],['ZD','#0f2518','#10B981']],n:287,date:'2026-03-27'},
+  {g:'Rock',c:'rock',tb:'rgba(244,63,94,.15)',tc:'#F43F5E',t:'Pinhani',v:'📍 JJ Arena — Beyoğlu',tm:'🕐 Cumartesi 28 Mart · 22:00',p:'400₺',u:'https://www.bubilet.com.tr',av:[['PN','#2a0a18','#F43F5E'],['AY','#1a1540','#A78BFA'],['MK','#0f2518','#10B981']],n:96,date:'2026-03-28'},
+  {g:'Elektronik',c:'elec',tb:'rgba(99,102,241,.15)',tc:'#818CF8',t:'Avangart Tabldot',v:'📍 Klein Phönix — Beyoğlu',tm:'🕐 Cumartesi 28 Mart · 21:00',p:'220₺',u:'https://www.bubilet.com.tr',av:[['AT','#0f0f2e','#818CF8'],['ZD','#0f2518','#10B981']],n:63,date:'2026-03-28'},
 ];
 
+let concerts = [];
 const filters=new Set(['rock','elec','alt','pop','rap']);
+let activeDate = 'today';
+
+function getDateRange(mode){
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  if(mode==='today'){
+    const end = new Date(today); end.setHours(23,59,59);
+    return [today,end];
+  }
+  if(mode==='tomorrow'){
+    const start = new Date(today); start.setDate(start.getDate()+1);
+    const end = new Date(start); end.setHours(23,59,59);
+    return [start,end];
+  }
+  if(mode==='week'){
+    const end = new Date(today); end.setDate(end.getDate()+7); end.setHours(23,59,59);
+    return [today,end];
+  }
+}
+
+function filterByDate(mode){
+  activeDate=mode;
+  const [start,end]=getDateRange(mode);
+  concerts=allConcerts.filter(c=>{
+    const d=new Date(c.date);
+    return d>=start && d<=end && filters.has(c.c);
+  });
+  renderPins();
+}
+
+const PIN_POSITIONS=[
+  {left:'14%',top:'35%'},{left:'36%',top:'22%'},{left:'14%',top:'57%'},
+  {left:'62%',top:'36%'},{left:'56%',top:'57%'},{left:'76%',top:'24%'},
+  {left:'28%',top:'42%'},{left:'70%',top:'50%'},{left:'45%',top:'28%'},
+  {left:'20%',top:'68%'},{left:'82%',top:'38%'},
+];
+
+function renderPins(){
+  // remove old pins
+  document.querySelectorAll('.pin').forEach(p=>p.remove());
+  const map=document.getElementById('map');
+  const sheet=document.getElementById('sheet');
+  const ovl=document.getElementById('ovl');
+  const badge=document.getElementById('badge');
+  concerts.forEach((c,i)=>{
+    if(i>=PIN_POSITIONS.length) return;
+    const pos=PIN_POSITIONS[i];
+    const pin=document.createElement('div');
+    pin.className='pin '+c.c;
+    pin.id='p'+i;
+    pin.style.left=pos.left;
+    pin.style.top=pos.top;
+    const icon={rock:'🎸',elec:'🎧',alt:'🎵',pop:'🎤',rap:'🎙'}[c.c];
+    pin.innerHTML=`<div class="pb">${icon} ${c.t} · ${c.tm.split('·')[1].trim()}</div><div class="pt"></div>`;
+    pin.onclick=()=>openSheet(i);
+    map.insertBefore(pin,sheet);
+  });
+  badge.textContent=concerts.length+' konser';
+  if(concerts.length===0){
+    badge.textContent='Konser yok';
+  }
+}
 let currentUser=null;
 
 // Clock
 function tick(){const d=new Date(),h=d.getHours().toString().padStart(2,'0'),m=d.getMinutes().toString().padStart(2,'0');document.getElementById('clock').textContent=h+':'+m}
 tick();setInterval(tick,10000);
+filterByDate('today');
 
 // Auth check on load
 // Harita herkese açık — giriş olmadan göster
@@ -450,8 +644,19 @@ function openSheet(i){
   document.getElementById('ovl').classList.add('open');
 }
 function closeSheet(){document.getElementById('sheet').classList.remove('open');document.getElementById('ovl').classList.remove('open')}
-function setD(btn){document.querySelectorAll('.d-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on')}
-function tog(btn,g){btn.classList.toggle('on');btn.classList.contains('on')?filters.add(g):filters.delete(g);let v=0;concerts.forEach((c,i)=>{const p=document.getElementById('p'+i);const s=filters.has(c.c);p.style.display=s?'':'none';if(s)v++});document.getElementById('badge').textContent=v+' konser'}
+function setD(btn){
+  document.querySelectorAll('.d-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  const modes=['today','tomorrow','week'];
+  const idx=[...document.querySelectorAll('.d-btn')].indexOf(btn);
+  filterByDate(modes[idx]);
+}
+function tog(btn,g){
+  btn.classList.toggle('on');
+  btn.classList.contains('on')?filters.add(g):filters.delete(g);
+  filterByDate(activeDate);
+}
+function toggleSub(btn){btn.classList.toggle('on');btn.textContent=btn.classList.contains('on')?'Takip':'Takip Et'}
 function go_(){const g=document.getElementById('bgo'),m=document.getElementById('bmb');g.classList.add('on');m.style.opacity='.35';m.disabled=true;const el=document.getElementById('scnt');el.textContent=`+${parseInt(el.textContent)+1} gidiyor`}
 function mb_(){const g=document.getElementById('bgo'),m=document.getElementById('bmb');m.classList.add('on');g.style.opacity='.35';g.disabled=true}
 </script>
