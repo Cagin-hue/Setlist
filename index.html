@@ -333,11 +333,39 @@ html,body{height:100%;background:var(--dark);font-family:var(--fb);color:var(--t
       </div>
     </div>
 
+    <!-- ARTISTS SCREEN -->
+    <div class="screen" id="scr-artists">
+      <div class="scr-header">
+        <div class="scr-title">Sanatçılar</div>
+        <div style="font-size:11px;color:var(--purple-l);font-weight:600;cursor:pointer">Hepsini gör</div>
+      </div>
+      <div class="comm-scroll">
+        <div class="sec-lbl">Bu Hafta Sahnede</div>
+        <div id="artist-list"></div>
+        <div class="sec-lbl">Yakında Geliyor</div>
+        <div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer">
+          <div style="width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#2a0a18,#3a1520);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎸</div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--text)">The Neighbourhood</div><div style="font-size:11px;color:var(--muted);margin-top:2px">26-27 Nisan · Küçükçiftlik Park</div></div>
+          <div style="font-size:11px;color:var(--purple-l);font-weight:600">Bilet →</div>
+        </div>
+        <div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer">
+          <div style="width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#0f0f2e,#1a1540);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎧</div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--text)">Gorillaz</div><div style="font-size:11px;color:var(--muted);margin-top:2px">14 Temmuz · İstanbul</div></div>
+          <div style="font-size:11px;color:var(--purple-l);font-weight:600">Bilet →</div>
+        </div>
+        <div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer">
+          <div style="width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#1f1500,#2a1a00);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">⚡</div>
+          <div style="flex:1"><div style="font-size:14px;font-weight:600;color:var(--text)">Megadeth</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Final turnesi · İstanbul</div></div>
+          <div style="font-size:11px;color:var(--purple-l);font-weight:600">Bilet →</div>
+        </div>
+      </div>
+    </div>
+
     <!-- COMMUNITY SCREEN -->
     <div class="screen" id="scr-community">
       <div class="scr-header">
         <div class="scr-title">Topluluk</div>
-        <div style="font-size:11px;color:var(--purple-l);font-weight:600;cursor:pointer">+ Kanal</div>
+        <div style="font-size:11px;color:var(--purple-l);font-weight:600;cursor:pointer" onclick="addChannel()">+ Kanal</div>
       </div>
       <div class="comm-scroll">
         <div class="sec-lbl">Kanallar</div>
@@ -373,17 +401,17 @@ html,body{height:100%;background:var(--dark);font-family:var(--fb);color:var(--t
           <div class="p-row">
             <div class="p-av" style="background:#2a0a18;color:#F43F5E">AY</div>
             <div style="flex:1"><div class="p-name">Ayşe Y.</div><div class="p-detail">Beşiktaş · Rock severler · 12 ortak konser</div></div>
-            <button class="conn-btn">Bağlan</button>
+            <button class="conn-btn" onclick="connect(this)">Bağlan</button>
           </div>
           <div class="p-row">
             <div class="p-av" style="background:#1a1540;color:#A78BFA">MK</div>
             <div style="flex:1"><div class="p-name">Mert K.</div><div class="p-detail">Kadıköy · Indie, Rock seviyor</div></div>
-            <button class="conn-btn">Bağlan</button>
+            <button class="conn-btn" onclick="connect(this)">Bağlan</button>
           </div>
           <div class="p-row">
             <div class="p-av" style="background:#0f2518;color:#10B981">ZD</div>
             <div style="flex:1"><div class="p-name">Zeynep D.</div><div class="p-detail">Şişli · Yalnız gidiyor · Belki odası</div></div>
-            <button class="conn-btn">Bağlan</button>
+            <button class="conn-btn" onclick="connect(this)">Bağlan</button>
           </div>
         </div>
 
@@ -395,7 +423,7 @@ html,body{height:100%;background:var(--dark);font-family:var(--fb);color:var(--t
           </div>
           <div class="post-text">Alessandro Cortini konserinden yeni çıktım. Analog synth atmosferi inanılmazdı, kelimeler yetmez 🎧</div>
           <div class="post-chip">📍 Zorlu PSM · 16 Mart</div>
-          <div class="post-acts"><span class="pa">♥ 24</span><span class="pa">💬 7 yorum</span><span class="pa">↗ Paylaş</span></div>
+          <div class="post-acts"><span class="pa" onclick="like(this,24)">♥ 24</span><span class="pa">💬 7 yorum</span><span class="pa">↗ Paylaş</span></div>
         </div>
         <div class="post-card">
           <div class="post-hdr">
@@ -404,7 +432,7 @@ html,body{height:100%;background:var(--dark);font-family:var(--fb);color:var(--t
           </div>
           <div class="post-text">Duman konserine tek bilet kaldı, kim alır? DM atın 🎸</div>
           <div class="post-chip">📍 Jolly Joker Atakent · 21 Mart</div>
-          <div class="post-acts"><span class="pa">♥ 11</span><span class="pa">💬 18 yorum</span><span class="pa">↗ Paylaş</span></div>
+          <div class="post-acts"><span class="pa" onclick="like(this,11)">♥ 11</span><span class="pa">💬 18 yorum</span><span class="pa">↗ Paylaş</span></div>
         </div>
         <div class="post-card">
           <div class="post-hdr">
@@ -413,14 +441,14 @@ html,body{height:100%;background:var(--dark);font-family:var(--fb);color:var(--t
           </div>
           <div class="post-text">Yalın konseri için kim grup yapar? Volkswagen Arena için eleman arıyorum 🎤</div>
           <div class="post-chip">📍 Volkswagen Arena · 26 Mart</div>
-          <div class="post-acts"><span class="pa">♥ 33</span><span class="pa">💬 22 yorum</span><span class="pa">↗ Paylaş</span></div>
+          <div class="post-acts"><span class="pa" onclick="like(this,33)">♥ 33</span><span class="pa">💬 22 yorum</span><span class="pa">↗ Paylaş</span></div>
         </div>
       </div>
     </div>
 
     <nav class="nav">
       <button class="ni on" id="nav-map" onclick="switchTab('map')"><div class="ni-ic">🗺</div><div class="ni-lb">Harita</div></button>
-      <button class="ni" id="nav-artists"><div class="ni-ic">🎵</div><div class="ni-lb">Sanatçılar</div></button>
+      <button class="ni" id="nav-artists" onclick="switchTab('artists')"><div class="ni-ic">🎵</div><div class="ni-lb">Sanatçılar</div></button>
       <button class="ni" id="nav-community" onclick="requireAuth('community')"><div class="ni-ic">👥</div><div class="ni-lb">Topluluk</div></button>
       <button class="ni" id="nav-profile" onclick="requireAuth('profile')"><div class="ni-ic">👤</div><div class="ni-lb">Profil</div></button>
     </nav>
@@ -620,7 +648,7 @@ function goBack(){
 function switchTab(tab){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
-  const scr = tab==='map'?'map':tab==='community'?'community':'profile';
+  const scr = tab==='map'?'map':tab==='artists'?'artists':tab==='community'?'community':'profile';
   document.getElementById('scr-'+scr).classList.add('active');
   document.getElementById('nav-'+tab).classList.add('on');
   const backBtn = document.getElementById('back-btn');
@@ -659,6 +687,52 @@ function tog(btn,g){
 function toggleSub(btn){btn.classList.toggle('on');btn.textContent=btn.classList.contains('on')?'Takip':'Takip Et'}
 function go_(){const g=document.getElementById('bgo'),m=document.getElementById('bmb');g.classList.add('on');m.style.opacity='.35';m.disabled=true;const el=document.getElementById('scnt');el.textContent=`+${parseInt(el.textContent)+1} gidiyor`}
 function mb_(){const g=document.getElementById('bgo'),m=document.getElementById('bmb');m.classList.add('on');g.style.opacity='.35';g.disabled=true}
+
+function connect(btn){
+  if(!currentUser){showAuth();return}
+  btn.textContent='✓ Bağlandı';
+  btn.style.borderColor='var(--teal)';
+  btn.style.color='var(--teal)';
+  btn.disabled=true;
+}
+
+function like(el,n){
+  const liked=el.dataset.liked;
+  if(liked){el.textContent='♥ '+n;delete el.dataset.liked;el.style.color=''}
+  else{el.textContent='♥ '+(n+1);el.dataset.liked='1';el.style.color='var(--coral)'}
+}
+
+function addChannel(){
+  if(!currentUser){showAuth();return}
+  const name=prompt('Kanal adı:');
+  if(name){alert(name+' kanalı oluşturuldu! (Yakında aktif olacak)');}
+}
+
+// Build artist list from this week's concerts
+function buildArtistList(){
+  const list=document.getElementById('artist-list');
+  if(!list)return;
+  const icons={rock:'🎸',elec:'🎧',alt:'🎵',pop:'🎤',rap:'🎙'};
+  const colors={rock:'#F43F5E',elec:'#818CF8',alt:'#10B981',pop:'#F59E0B',rap:'#8B5CF6'};
+  const bgs={rock:'#2a0a12',elec:'#0f0f2e',alt:'#0a1f18',pop:'#1f1500',rap:'#12082a'};
+  const seen=new Set();
+  allConcerts.forEach(c=>{
+    if(seen.has(c.t))return;
+    seen.add(c.t);
+    const d=document.createElement('div');
+    d.style.cssText='padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:pointer';
+    d.innerHTML=`
+      <div style="width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,${bgs[c.c]},${bgs[c.c]}cc);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${icons[c.c]}</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600;color:var(--text)">${c.t}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">${c.g} · ${c.tm.split('·')[0].trim()}</div>
+      </div>
+      <div style="font-size:11px;color:var(--purple-l);font-weight:600">Gör →</div>`;
+    d.onclick=()=>switchTab('map');
+    list.appendChild(d);
+  });
+}
+buildArtistList();
 </script>
 </body>
 </html>
