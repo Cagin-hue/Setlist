@@ -16,13 +16,9 @@ jobs:
         with:
           python-version: '3.11'
       - name: Kutuphaneleri yukle
-        run: |
-          pip install playwright supabase
-          playwright install chromium
-          playwright install-deps chromium
+        run: pip install supabase
       - name: Scraper calistir
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python scraper.py
-        
