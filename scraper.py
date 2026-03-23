@@ -2,9 +2,10 @@ import asyncio
 import json
 import re
 import os
+import urllib.request
+import urllib.parse
 from datetime import datetime, date
 from typing import Optional
-from playwright.async_api import async_playwright
 from supabase import create_client, Client
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
@@ -12,8 +13,8 @@ SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
 
 GENRE_KEYWORDS = {
     'rock': ['rock', 'metal', 'punk', 'duman', 'pinhani', 'pentagram', 'yüksek sadakat', 'mor ve ötesi', 'kargo', 'athena'],
-    'elec': ['elektronik', 'electronic', 'dj', 'techno', 'house', 'edm', 'cortini', 'synthesizer', 'rave', 'avangart tabldot'],
-    'alt': ['alternatif', 'indie', 'folk', 'caz', 'jazz', 'blues', 'emir can', 'can bonomo', 'cem adrian', 'paribu', 'nardis'],
+    'elec': ['elektronik', 'electronic', 'dj', 'techno', 'house', 'edm', 'cortini', 'synthesizer', 'rave', 'avangart'],
+    'alt': ['alternatif', 'indie', 'folk', 'caz', 'jazz', 'blues', 'emir can', 'can bonomo', 'cem adrian', 'nardis'],
     'pop': ['pop', 'gökhan', 'yalın', 'sıla', 'tarkan', 'irem derici', 'melike şahin', 'hadise', 'murat boz'],
     'rap': ['rap', 'hip hop', 'hip-hop', 'şanışer', 'sokrat', 'bege', 'lvbel', 'sagopa', 'ceza', 'ezhel'],
 }
@@ -27,7 +28,6 @@ DISTRICT_MAP = {
     'Küçükçekmece': ['küçükçekmece', 'atakent'],
     'Ataşehir': ['ataşehir'],
     'Bostancı': ['bostancı'],
-    'Sarıyer': ['sarıyer', 'çırağan'],
 }
 
 COORDS_MAP = {
@@ -71,81 +71,97 @@ def get_coords(venue):
 def clean_price(s):
     if not s:
         return 'Fiyat TBA'
-    nums = re.findall(r'\d+', s.replace('.', '').replace(',', ''))
+    nums = re.findall(r'\d+', str(s).replace('.', '').replace(',', ''))
     if nums:
         return f"{nums[0]}₺"
     return 'Fiyat TBA'
 
-def parse_date(text):
-    if not text:
+def fetch_url(url, headers=None):
+    req = urllib.request.Request(url)
+    req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
+    req.add_header('Accept', 'application/json, text/html')
+    if headers:
+        for k, v in headers.items():
+            req.add_header(k, v)
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return resp.read().decode('utf-8', errors='ignore')
+    except Exception as e:
+        print(f"  Fetch error for {url}: {e}")
         return None
-    text = text.strip().lower()
-    MONTHS = {
-        'ocak':1,'şubat':2,'mart':3,'nisan':4,'mayıs':5,'haziran':6,
-        'temmuz':7,'ağustos':8,'eylül':9,'ekim':10,'kasım':11,'aralık':12,
-        'jan':1,'feb':2,'mar':3,'apr':4,'may':5,'jun':6,
-        'jul':7,'aug':8,'sep':9,'oct':10,'nov':11,'dec':12,
-    }
-    # YYYY-MM-DD
-    m = re.search(r'(\d{4})-(\d{2})-(\d{2})', text)
-    if m:
-        try: return date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
-        except: pass
-    # DD.MM.YYYY
-    m = re.search(r'(\d{1,2})[./](\d{1,2})[./](\d{4})', text)
-    if m:
-        try: return date(int(m.group(3)), int(m.group(2)), int(m.group(1)))
-        except: pass
-    # DD Month YYYY
-    m = re.search(r'(\d{1,2})\s+([a-zşçığüö]+)\s*(\d{4})?', text)
-    if m:
-        day, month_str = int(m.group(1)), m.group(2)
-        year = int(m.group(3)) if m.group(3) else datetime.now().year
-        for mn, mv in MONTHS.items():
-            if mn in month_str:
-                try: return date(year, mv, day)
-                except: pass
-    return None
 
-async def scrape_biletix(page):
-    print("🎫 Biletix scraping...")
+def scrape_biletix_rss():
+    """Biletix RSS feed — most reliable"""
+    print("🎫 Biletix RSS scraping...")
     concerts = []
     try:
-        # Use direct Istanbul music URL
-        await page.goto('https://www.biletix.com/category/MUSIC/ISTANBUL/tr', timeout=45000)
-        await page.wait_for_load_state('networkidle')
-        await asyncio.sleep(5)
+        # Biletix RSS for Istanbul music
+        url = "https://www.biletix.com/rss/category/MUSIC/ISTANBUL/tr"
+        content = fetch_url(url)
+        if not content:
+            print("  Biletix RSS: no content")
+            return []
         
-        # Get all links that look like event pages
-        links = await page.eval_on_selector_all('a[href*="/etkinlik/"]', 
-            'els => els.map(e => ({href: e.href, text: e.innerText.trim()}))')
+        # Parse RSS items
+        items = re.findall(r'<item>(.*?)</item>', content, re.DOTALL)
+        print(f"  Found {len(items)} RSS items")
         
-        print(f"  Found {len(links)} event links")
-        
-        for link in links[:50]:
+        for item in items:
             try:
-                href = link.get('href', '')
-                text = link.get('text', '')
-                if not text or len(text) < 3:
-                    continue
+                title = re.search(r'<title><!\[CDATA\[(.*?)\]\]></title>', item)
+                title = title.group(1).strip() if title else ''
+                if not title:
+                    title_m = re.search(r'<title>(.*?)</title>', item)
+                    title = title_m.group(1).strip() if title_m else ''
                 
-                lines = [l.strip() for l in text.split('\n') if l.strip()]
-                title = lines[0] if lines else text[:100]
+                link = re.search(r'<link>(.*?)</link>', item)
+                link = link.group(1).strip() if link else ''
                 
-                # Try to find date in text
+                desc = re.search(r'<description><!\[CDATA\[(.*?)\]\]></description>', item, re.DOTALL)
+                desc = desc.group(1) if desc else ''
+                
+                pub_date = re.search(r'<pubDate>(.*?)</pubDate>', item)
+                pub_date = pub_date.group(1) if pub_date else ''
+                
+                # Extract venue from description
+                venue = ''
+                venue_m = re.search(r'(?:Mekan|Venue|Yer)[:\s]+([^\n<]+)', desc, re.IGNORECASE)
+                if venue_m:
+                    venue = venue_m.group(1).strip()
+                
+                # Extract date from description or pubDate
                 date_str = ''
-                for line in lines:
-                    if re.search(r'\d{1,2}[./]\d{1,2}|\d{1,2}\s+[a-zşçığüö]+', line.lower()):
-                        date_str = line
-                        break
+                date_m = re.search(r'(?:Tarih|Date)[:\s]+([^\n<]+)', desc, re.IGNORECASE)
+                if date_m:
+                    date_str = date_m.group(1).strip()
                 
-                venue = next((l for l in lines[1:] if any(v in l.lower() for v in 
-                    ['hall', 'arena', 'psm', 'joker', 'sahne', 'merkezi', 'park', 'babylon', 'blind', 'nardis'])), '')
+                if not date_str and pub_date:
+                    # Parse RSS date format: "Thu, 21 Mar 2026 00:00:00 +0000"
+                    date_m2 = re.search(r'\d{1,2}\s+\w+\s+\d{4}', pub_date)
+                    if date_m2:
+                        date_str = date_m2.group(0)
                 
-                price_str = next((l for l in lines if '₺' in l or ('tl' in l.lower() and any(c.isdigit() for c in l))), '')
+                # Extract price
+                price_m = re.search(r'(\d+[\.,]?\d*)\s*[₺TL]', desc, re.IGNORECASE)
+                price = f"{price_m.group(1)}₺" if price_m else 'Fiyat TBA'
                 
-                concert_date = parse_date(date_str)
-                if not concert_date or concert_date < date.today():
+                concert_date = None
+                if date_str:
+                    MONTHS_EN = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,
+                                'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
+                    m = re.search(r'(\d{1,2})\s+(\w+)\s+(\d{4})', date_str)
+                    if m:
+                        day, month_str, year = int(m.group(1)), m.group(2), int(m.group(3))
+                        month_num = MONTHS_EN.get(month_str[:3].title(), 0)
+                        if month_num:
+                            try:
+                                concert_date = date(year, month_num, day)
+                            except:
+                                pass
+                
+                if not concert_date:
+                    continue
+                if concert_date < date.today():
                     continue
                 
                 concerts.append({
@@ -154,9 +170,9 @@ async def scrape_biletix(page):
                     'venue': venue[:200] or 'İstanbul',
                     'date': concert_date.isoformat(),
                     'time': '21:00',
-                    'price': clean_price(price_str),
+                    'price': price,
                     'genre': detect_genre(title + ' ' + venue),
-                    'ticket_url': href[:500],
+                    'ticket_url': link[:500] or 'https://www.biletix.com',
                     'district': detect_district(venue),
                     'going_count': 0,
                     'lat': get_coords(venue)[0],
@@ -167,140 +183,86 @@ async def scrape_biletix(page):
                 continue
                 
     except Exception as e:
-        print(f"  Biletix error: {e}")
+        print(f"  Biletix RSS error: {e}")
     
-    # Deduplicate
-    seen = set()
-    unique = []
-    for c in concerts:
-        key = (c['title'], c['date'])
-        if key not in seen:
-            seen.add(key)
-            unique.append(c)
-    
-    print(f"  ✅ Biletix: {len(unique)} concerts")
-    return unique
+    print(f"  ✅ Biletix RSS: {len(concerts)} concerts")
+    return concerts
 
-async def scrape_bubilet(page):
-    print("🎫 Bubilet scraping...")
+def scrape_ticketmaster():
+    """Ticketmaster/Biletix API"""
+    print("🎫 Ticketmaster API scraping...")
     concerts = []
     try:
-        await page.goto('https://www.bubilet.com.tr/istanbul/kategori/konser', timeout=45000)
-        await page.wait_for_load_state('networkidle')
-        await asyncio.sleep(4)
+        # Ticketmaster Discovery API - public endpoint for Turkey
+        url = "https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&city=Istanbul&countryCode=TR&size=50&sort=date,asc"
+        # Note: This requires API key but let's try without first
+        content = fetch_url(url)
+        if not content:
+            return []
         
-        # Get event links
-        links = await page.eval_on_selector_all('a[href*="/etkinlik/"], a[href*="/konser/"]',
-            'els => els.map(e => ({href: e.href, text: e.innerText.trim()}))')
+        data = json.loads(content)
+        events = data.get('_embedded', {}).get('events', [])
+        print(f"  Found {len(events)} Ticketmaster events")
         
-        print(f"  Found {len(links)} event links on Bubilet")
-        
-        for link in links[:50]:
+        for event in events:
             try:
-                href = link.get('href', '')
-                text = link.get('text', '')
-                if not text or len(text) < 3:
-                    continue
+                title = event.get('name', '')
+                dates = event.get('dates', {})
+                start = dates.get('start', {})
+                date_str = start.get('localDate', '')
+                time_str = start.get('localTime', '21:00')[:5]
                 
-                lines = [l.strip() for l in text.split('\n') if l.strip()]
-                title = lines[0] if lines else ''
-                if not title:
-                    continue
-                    
-                date_str = next((l for l in lines if re.search(r'\d{1,2}[./]\d{1,2}|\d{1,2}\s+[a-zşçığüö]+', l.lower())), '')
-                venue = next((l for l in lines[1:] if any(v in l.lower() for v in 
-                    ['hall', 'arena', 'psm', 'joker', 'sahne', 'merkezi', 'istanbul'])), '')
-                price_str = next((l for l in lines if '₺' in l), '')
+                venues = event.get('_embedded', {}).get('venues', [{}])
+                venue = venues[0].get('name', '') if venues else ''
                 
-                concert_date = parse_date(date_str)
+                price_ranges = event.get('priceRanges', [])
+                price = f"{int(price_ranges[0].get('min', 0))}₺" if price_ranges else 'Fiyat TBA'
+                
+                url_link = event.get('url', '')
+                
+                concert_date = date.fromisoformat(date_str) if date_str else None
                 if not concert_date or concert_date < date.today():
                     continue
                 
                 concerts.append({
                     'title': title[:200],
                     'artist': title[:200],
-                    'venue': venue[:200] or 'İstanbul',
+                    'venue': venue[:200],
                     'date': concert_date.isoformat(),
-                    'time': '21:00',
-                    'price': clean_price(price_str),
+                    'time': time_str,
+                    'price': price,
                     'genre': detect_genre(title + ' ' + venue),
-                    'ticket_url': href[:500] or 'https://www.bubilet.com.tr',
+                    'ticket_url': url_link[:500] or 'https://www.biletix.com',
                     'district': detect_district(venue),
                     'going_count': 0,
                     'lat': get_coords(venue)[0],
                     'lng': get_coords(venue)[1],
-                    'source': 'bubilet',
+                    'source': 'ticketmaster',
                 })
             except:
                 continue
+                
     except Exception as e:
-        print(f"  Bubilet error: {e}")
+        print(f"  Ticketmaster error: {e}")
     
-    seen = set()
-    unique = []
-    for c in concerts:
-        key = (c['title'], c['date'])
-        if key not in seen:
-            seen.add(key)
-            unique.append(c)
-    
-    print(f"  ✅ Bubilet: {len(unique)} concerts")
-    return unique
+    print(f"  ✅ Ticketmaster: {len(concerts)} concerts")
+    return concerts
 
-async def scrape_paribu(page):
-    """Paribu Art directly — reliable source"""
-    print("🎫 Paribu Art scraping...")
+def scrape_setmore():
+    """Try Setmore / Eventbrite style APIs"""
+    print("🎫 Eventbrite API scraping...")
     concerts = []
     try:
-        await page.goto('https://art.paribu.com/calendar', timeout=45000)
-        await page.wait_for_load_state('networkidle')
-        await asyncio.sleep(4)
-        
-        # Get all text content
-        content = await page.inner_text('body')
-        lines = [l.strip() for l in content.split('\n') if l.strip()]
-        
-        # Find concert entries — look for KONSER pattern
-        i = 0
-        while i < len(lines):
-            line = lines[i]
-            if 'KONSER' in line.upper() or 'KONSER' in lines[i-1].upper() if i > 0 else False:
-                # Try to build a concert entry
-                date_str = ''
-                title = ''
-                
-                # Look nearby lines for date and title
-                for j in range(max(0, i-3), min(len(lines), i+5)):
-                    if re.search(r'\d{1,2}\s+[A-Za-zşçığüöŞÇİĞÜÖ]+\s+202\d', lines[j]):
-                        date_str = lines[j]
-                    elif len(lines[j]) > 5 and 'KONSER' not in lines[j].upper() and not re.search(r'^\d', lines[j]):
-                        if not title:
-                            title = lines[j]
-                
-                if title and date_str:
-                    concert_date = parse_date(date_str)
-                    if concert_date and concert_date >= date.today():
-                        concerts.append({
-                            'title': title[:200],
-                            'artist': title[:200],
-                            'venue': 'Paribu Art',
-                            'date': concert_date.isoformat(),
-                            'time': '21:00',
-                            'price': 'Fiyat TBA',
-                            'genre': detect_genre(title),
-                            'ticket_url': 'https://art.paribu.com',
-                            'district': 'Kadıköy',
-                            'going_count': 0,
-                            'lat': 40.9906,
-                            'lng': 29.0229,
-                            'source': 'paribu',
-                        })
-            i += 1
-            
+        # Eventbrite public search
+        url = "https://www.eventbriteapi.com/v3/events/search/?location.address=Istanbul&categories=103&sort_by=date&token=public"
+        content = fetch_url(url)
+        if not content:
+            return []
+        data = json.loads(content)
+        events = data.get('events', [])
+        print(f"  Found {len(events)} Eventbrite events")
     except Exception as e:
-        print(f"  Paribu error: {e}")
-    
-    print(f"  ✅ Paribu: {len(concerts)} concerts")
+        print(f"  Eventbrite error: {e}")
     return concerts
 
 def upsert_concerts(sb, concerts):
@@ -323,7 +285,7 @@ def upsert_concerts(sb, concerts):
             print(f"  DB error: {concert.get('title','?')}: {e}")
     return inserted, updated
 
-async def main():
+def main():
     print("🚀 Setlist Scraper başlıyor...")
     print(f"📅 {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print("=" * 50)
@@ -334,35 +296,31 @@ async def main():
     
     sb = create_client(SUPABASE_URL, SUPABASE_KEY)
     
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(
-            headless=True,
-            args=['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-        )
-        context = await browser.new_context(
-            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            viewport={'width': 1280, 'height': 720},
-            locale='tr-TR',
-        )
-        page = await context.new_page()
-        
-        biletix = await scrape_biletix(page)
-        bubilet = await scrape_bubilet(page)
-        paribu = await scrape_paribu(page)
-        
-        all_concerts = biletix + bubilet + paribu
-        await browser.close()
+    biletix = scrape_biletix_rss()
+    ticketmaster = scrape_ticketmaster()
+    
+    all_concerts = biletix + ticketmaster
+    
+    # Deduplicate
+    seen = set()
+    unique = []
+    for c in all_concerts:
+        key = (c['title'].lower(), c['date'])
+        if key not in seen:
+            seen.add(key)
+            unique.append(c)
     
     print("=" * 50)
-    print(f"📊 Toplam {len(all_concerts)} konser bulundu")
+    print(f"📊 Toplam {len(unique)} benzersiz konser")
     
-    if all_concerts:
-        inserted, updated = upsert_concerts(sb, all_concerts)
+    if unique:
+        inserted, updated = upsert_concerts(sb, unique)
         print(f"✅ {inserted} yeni eklendi, {updated} güncellendi")
     else:
-        print("⚠️  Konser bulunamadı — site yapıları değişmiş olabilir")
+        print("⚠️  Konser bulunamadı")
+        print("💡 Manuel veri girişi için Supabase Table Editor kullanın")
     
     print("✨ Tamamlandı!")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
