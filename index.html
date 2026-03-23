@@ -532,24 +532,52 @@ const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Tüm konserler — tarih: 2026-03-XX formatında
-const allConcerts=[
-  {g:'Alternatif',c:'alt',tb:'rgba(16,185,129,.12)',tc:'#10B981',t:'Emir Can İğrek',v:'📍 IF Performance Hall — Beşiktaş',tm:'🕐 Pazartesi 16 Mart · 21:30',p:'350₺',u:'https://www.bubilet.com.tr',av:[['EC','#3a1520','#F43F5E'],['AY','#1a1540','#A78BFA'],['MK','#0f2518','#10B981']],n:47,date:'2026-03-16'},
-  {g:'Elektronik',c:'elec',tb:'rgba(99,102,241,.15)',tc:'#818CF8',t:'Alessandro Cortini',v:'📍 Zorlu PSM — Beşiktaş',tm:'🕐 Pazartesi 16 Mart · 22:00',p:'650₺',u:'https://www.zorlu.com',av:[['AC','#0f0f2e','#818CF8'],['ZD','#0f2518','#10B981'],['BT','#1a1540','#A78BFA']],n:203,date:'2026-03-16'},
-  {g:'Alternatif',c:'alt',tb:'rgba(16,185,129,.12)',tc:'#10B981',t:'Cem Adrian',v:'📍 Jolly Joker Kartal İstMarina',tm:'🕐 Salı 17 Mart · 21:00',p:'350₺',u:'https://www.bubilet.com.tr',av:[['CA','#0a1f18','#10B981'],['MK','#1a1540','#A78BFA']],n:34,date:'2026-03-17'},
-  {g:'Elektronik',c:'elec',tb:'rgba(99,102,241,.15)',tc:'#818CF8',t:'Lakecia Benjamin',v:'📍 Paribu Art — Beyoğlu',tm:'🕐 Salı 17 Mart · 21:00',p:'300₺',u:'https://art.paribu.com',av:[['LB','#0f0f2e','#818CF8'],['ZD','#0f2518','#10B981'],['AY','#3a1520','#F43F5E']],n:88,date:'2026-03-17'},
-  {g:'Elektronik',c:'elec',tb:'rgba(99,102,241,.15)',tc:'#818CF8',t:'Techno Gecesi',v:'📍 Klein Phönix — Beyoğlu',tm:'🕐 Salı 17 Mart · 22:00',p:'600₺',u:'https://bugece.co',av:[['TG','#0f0f2e','#818CF8'],['AY','#3a1520','#F43F5E']],n:89,date:'2026-03-17'},
-  {g:'Elektronik',c:'elec',tb:'rgba(99,102,241,.15)',tc:'#818CF8',t:'Blind İstanbul Gecesi',v:'📍 Blind İstanbul — Beyoğlu',tm:'🕐 Çarşamba 18 Mart · 22:00',p:'500₺',u:'https://bugece.co',av:[['BL','#0f0f2e','#818CF8'],['ZD','#0f2518','#10B981'],['MK','#1a1540','#A78BFA']],n:67,date:'2026-03-18'},
-  {g:'Rock',c:'rock',tb:'rgba(244,63,94,.15)',tc:'#F43F5E',t:'Rock & Metal Gecesi',v:'📍 IF Performance Hall — Beşiktaş',tm:'🕐 Perşembe 19 Mart · 21:00',p:'1000₺',u:'https://bugece.co',av:[['RM','#2a0a18','#F43F5E'],['BT','#1a1540','#A78BFA']],n:45,date:'2026-03-19'},
-  {g:'Elektronik',c:'elec',tb:'rgba(99,102,241,.15)',tc:'#818CF8',t:'Hey! Douglas',v:'📍 Blind İstanbul — Beyoğlu',tm:'🕐 Perşembe 19 Mart · 21:00',p:'200₺',u:'https://www.bubilet.com.tr',av:[['HD','#0f0f2e','#818CF8'],['AY','#3a1520','#F43F5E']],n:41,date:'2026-03-19'},
-  {g:'Rap',c:'rap',tb:'rgba(139,92,246,.15)',tc:'#8B5CF6',t:'Bege',v:'📍 IF Performance Hall — Beşiktaş',tm:'🕐 Cuma 20 Mart · 22:00',p:'250₺',u:'https://www.bubilet.com.tr',av:[['BG','#12082a','#8B5CF6'],['ZD','#0f2518','#10B981']],n:55,date:'2026-03-20'},
-  {g:'Rock',c:'rock',tb:'rgba(244,63,94,.15)',tc:'#F43F5E',t:'Duman',v:'📍 Jolly Joker Atakent — Küçükçekmece',tm:'🕐 Cumartesi 21 Mart · 21:00',p:'450₺',u:'https://www.bubilet.com.tr',av:[['DU','#2a0a18','#F43F5E'],['ZD','#0f2518','#10B981'],['BT','#1a1540','#A78BFA'],['AY','#3a1520','#F87171']],n:134,date:'2026-03-21'},
-  {g:'Rap',c:'rap',tb:'rgba(139,92,246,.15)',tc:'#8B5CF6',t:'Lvbel C5',v:'📍 Klein Phönix — Beyoğlu',tm:'🕐 Çarşamba 25 Mart · 22:00',p:'280₺',u:'https://www.bubilet.com.tr',av:[['LC','#12082a','#8B5CF6'],['MK','#1a1540','#A78BFA']],n:78,date:'2026-03-25'},
-  {g:'Alternatif',c:'alt',tb:'rgba(16,185,129,.12)',tc:'#10B981',t:'Ben Caplan',v:'📍 Paribu Art Ana Sahne — Beyoğlu',tm:'🕐 Perşembe 26 Mart · 21:00',p:'350₺',u:'https://art.paribu.com',av:[['BC','#0a1f18','#10B981'],['MK','#1a1540','#A78BFA']],n:72,date:'2026-03-26'},
-  {g:'Pop',c:'pop',tb:'rgba(245,158,11,.12)',tc:'#F59E0B',t:'Yalın',v:'📍 Volkswagen Arena — Şişli',tm:'🕐 Perşembe 26 Mart · 21:00',p:'500₺',u:'https://www.bubilet.com.tr',av:[['YL','#1f1500','#F59E0B'],['EC','#3a1520','#F43F5E'],['BT','#1a1540','#A78BFA']],n:312,date:'2026-03-26'},
-  {g:'Pop',c:'pop',tb:'rgba(245,158,11,.12)',tc:'#F59E0B',t:'Yalın',v:'📍 Volkswagen Arena — Şişli',tm:'🕐 Cuma 27 Mart · 21:00',p:'500₺',u:'https://www.bubilet.com.tr',av:[['YL','#1f1500','#F59E0B'],['ZD','#0f2518','#10B981']],n:287,date:'2026-03-27'},
-  {g:'Rock',c:'rock',tb:'rgba(244,63,94,.15)',tc:'#F43F5E',t:'Pinhani',v:'📍 JJ Arena — Beyoğlu',tm:'🕐 Cumartesi 28 Mart · 22:00',p:'400₺',u:'https://www.bubilet.com.tr',av:[['PN','#2a0a18','#F43F5E'],['AY','#1a1540','#A78BFA'],['MK','#0f2518','#10B981']],n:96,date:'2026-03-28'},
-  {g:'Elektronik',c:'elec',tb:'rgba(99,102,241,.15)',tc:'#818CF8',t:'Avangart Tabldot',v:'📍 Klein Phönix — Beyoğlu',tm:'🕐 Cumartesi 28 Mart · 21:00',p:'220₺',u:'https://www.bubilet.com.tr',av:[['AT','#0f0f2e','#818CF8'],['ZD','#0f2518','#10B981']],n:63,date:'2026-03-28'},
-];
+let allConcerts=[];
+
+// Genre display config
+const GENRE_CONFIG={
+  rock:{g:'Rock',tb:'rgba(244,63,94,.15)',tc:'#F43F5E'},
+  elec:{g:'Elektronik',tb:'rgba(99,102,241,.15)',tc:'#818CF8'},
+  alt:{g:'Alternatif',tb:'rgba(16,185,129,.12)',tc:'#10B981'},
+  pop:{g:'Pop',tb:'rgba(245,158,11,.12)',tc:'#F59E0B'},
+  rap:{g:'Rap',tb:'rgba(139,92,246,.15)',tc:'#8B5CF6'},
+};
+
+const GENRE_AVATARS={
+  rock:[['EC','#3a1520','#F43F5E'],['AY','#1a1540','#A78BFA'],['MK','#0f2518','#10B981']],
+  elec:[['AC','#0f0f2e','#818CF8'],['ZD','#0f2518','#10B981'],['BT','#1a1540','#A78BFA']],
+  alt:[['CB','#0f2518','#10B981'],['MK','#1a1540','#A78BFA']],
+  pop:[['GT','#1f1500','#F59E0B'],['ZD','#0f2518','#10B981']],
+  rap:[['ŞŞ','#12082a','#8B5CF6'],['AY','#3a1520','#F43F5E']],
+};
+
+async function loadConcerts(){
+  const{data,error}=await sb.from('concerts').select('*').order('date',{ascending:true});
+  if(error){console.error('Concert load error:',error);return;}
+  allConcerts=data.map(row=>({
+    g:GENRE_CONFIG[row.genre]?.g||row.genre,
+    c:row.genre,
+    tb:GENRE_CONFIG[row.genre]?.tb||'rgba(124,58,237,.15)',
+    tc:GENRE_CONFIG[row.genre]?.tc||'#A78BFA',
+    t:row.artist,
+    v:'📍 '+row.venue+' — '+row.district,
+    tm:'🕐 '+formatDate(row.date)+' · '+row.time,
+    p:row.price,
+    u:row.ticket_url,
+    av:GENRE_AVATARS[row.genre]||[['??','#1a1a38','#A78BFA']],
+    n:row.going_count||0,
+    date:row.date,
+    id:row.id,
+  }));
+  filterByDate(activeDate);
+}
+
+function formatDate(dateStr){
+  const d=new Date(dateStr);
+  const days=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+  const months=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  return days[d.getDay()]+' '+d.getDate()+' '+months[d.getMonth()];
+}
 
 let concerts = [];
 const filters=new Set(['rock','elec','alt','pop','rap']);
@@ -620,7 +648,7 @@ let currentUser=null;
 // Clock
 function tick(){const d=new Date(),h=d.getHours().toString().padStart(2,'0'),m=d.getMinutes().toString().padStart(2,'0');document.getElementById('clock').textContent=h+':'+m}
 tick();setInterval(tick,10000);
-filterByDate('today');
+loadConcerts();
 
 // Auth check on load
 // Harita herkese açık — giriş olmadan göster
